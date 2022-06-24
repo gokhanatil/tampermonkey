@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SalesForce Case List Helper for CSEs
 // @namespace    https://raw.githubusercontent.com/gokhanatil/tampermonkey/main/sfcasehelper.js
-// @version      0.3
+// @version      0.4
 // @description  bringing back the correct colors to the indicator field, and enchancing the SupportRepComments column
 // @author       Gokhan Atil
 // @match        https://snowforce.lightning.force.com/*
