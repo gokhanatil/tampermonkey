@@ -2,13 +2,12 @@
 // @name         SalesForce Case List Helper for CSEs
 // @updateURL    https://raw.githubusercontent.com/gokhanatil/tampermonkey/main/sfcasehelper.js
 // @downloadURL  https://raw.githubusercontent.com/gokhanatil/tampermonkey/main/sfcasehelper.js
-// @version      0.42
+// @version      0.5
 // @description  bringing back the correct colors to the indicator field, and enchancing the SupportRepComments column
 // @author       Gokhan Atil
 // @match        https://snowforce.lightning.force.com/*
 // @grant        unsafeWindow
 // ==/UserScript==
-
 
 
 setInterval(function() {
@@ -33,12 +32,26 @@ setInterval(function() {
 
     }
 
+    function EnableLink( element ) {
+
+        let original_string = element.getElementsByClassName('uiOutputTextArea')[0].innerHTML;
+        let new_string = original_string.replace( /(SNOW-[0-9]*)/, '<a target="_blank" href="https://snowflakecomputing.atlassian.net/browse/$1">$1</a>' );
+        element.getElementsByClassName('uiOutputTextArea')[0].innerHTML = new_string;
+
+        original_string = element.getElementsByClassName('uiOutputTextArea')[0].innerHTML;
+        new_string = original_string.replace( /#([^<]*)/, '<a target="_blank" href="https://snowflake.slack.com/channels/$1">#$1</a>' );
+        element.getElementsByClassName('uiOutputTextArea')[0].innerHTML = new_string;
+
+    }
+
     function myFunction( cases ) {
 
 
         if (cases._data.record.SupportRepComments__c) {
 
             if (cases.getElementsByClassName('uiOutputTextArea')[0].innerHTML.includes( '<span>' )) return;
+            if (cases.getElementsByClassName('uiOutputTextArea')[0].innerHTML.includes( 'snowflakecomputing' )) return;
+            if (cases.getElementsByClassName('uiOutputTextArea')[0].innerHTML.includes( 'channels' )) return;
 
             let date_string = cases._data.record.SupportRepComments__c.split(':')[0];
             let target_date = new Date( date_string );
@@ -48,6 +61,7 @@ setInterval(function() {
             if (diff == 0 ) ChangeColor( cases, date_string, 'green' );
             if (diff < 0 ) ChangeColor( cases, date_string, 'red' );
 
+            EnableLink( cases );
 
         }
 
